@@ -1,0 +1,19 @@
+FROM alpine:latest AS host
+
+RUN apk update && \
+	apk upgrade && \
+	apk add vim
+
+COPY _fcadet_apitoise_utils/host.sh host.sh
+
+FROM frrouting/frr AS router
+
+RUN apk update && \
+	apk upgrade && \
+	apk add vim
+
+COPY _fcadet_apitoise_utils/daemons /etc/frr/daemons
+COPY _fcadet_apitoise_utils/start.sh start.sh
+COPY _fcadet_apitoise_utils/router.sh router.sh
+
+ENTRYPOINT ./start.sh
